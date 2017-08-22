@@ -1,88 +1,72 @@
 $(document).ready(function() {
+    console.log(strConn);
     var gameRunning = false;
-
-    while (gameRunning) {
-        //wait for input
-        //check if gameRunning is true
-        //check if player is dead or not
-        //check if player won
-    }
+    var wordArray = new Array();
+    var maxGuesses = 5;
+    var guesses = new Array();
+    var currentGuesses = 0;
+    var corrGuesses = new Array();
 
     //run when startbutton is pushed
     function startGame() {
         gameRunning = true;
-        //ask for difficulty level
-        //get random word from db based on difficulty
-    }
-
-    //function when letter input is recorded
-    function checkLetter() {
-        //is letter really 1 letter and not more, or something else
-        //does letter exist in our word
-        if (letter is correct) {
-            //add to word
-        }
-    else {
-            //1 life lost!
-        }
-        //remove letter from array of possible letters
-    }
-
-    function winGame() {
-        //something cool happens
-    }
-
-    function winGame() {
-        //something NOT cool happens
-    }
-
-
-    var wordBank = ["geting", "adjunkt", "ko"];
-    var currentWord;
-    var wordArray = new Array;
-    function checkInp()
-    {
-        var x=document.forms["letterInput"]["letter"].value;
-        var regex=/^[0-9]+$/;
-        if (x.match(regex))
-        {
-            alert("Must input a letter");
-            return false;
-        }
-    }
-
-    function checkGuess(){
-        input = document.forms["letterInput"]["letter"].value;
-        for(i = 0; i < wordArray.length; i++){
-            if (input == wordArray[i]){
-                $('#t'+i).append(input);
-            }
-        }
-    }
-
-    function getWord()
-    {
-        var rnd=Math.floor(Math.random()*wordBank.length);
-        currentWord = wordBank[rnd];
-        wordArray = currentWord.split("");
-    }
-
-
-    function addTiles(){
-        for(i = 0; i<numberOfTiles; i++){
+        var wordBank = ["geting", "adjunkt", "ko"];
+        var rnd=Math.floor(Math.random() * wordBank.length); //choose random word from array
+        var currentWord = wordBank[rnd];
+        wordArray = currentWord.split(""); //make the letters in the word into an array
+        var numberOfTiles = wordArray.length;
+        console.log(wordArray);
+        for(i = 0; i<numberOfTiles; i++) { //append to div # of boxes for letters
             $('#word').append('<div class="tile" id=t'+i+'></div>');
         }
     }
 
-    var numberOfTiles = wordArray.length;
+    function checkGuess(input) {
+        var found = false;
+        for (var j = 0; j < guesses.length; j++) { //go through previous guesses
+            if (input == guesses[j]) {
+                alert("Du har redan använt denna gissning!");
+                found = true;
+            }
+        }
+        if (!found) {
+            guesses.push(input);
+        }
+    }
+    //function when letter input is recorded
+    function guess(wordArray, currentGuesses) {
+        var input = $("input").val(); //save input
+        var prevEntered = false;
+        var found = false;
 
-    getWord();
-    addTiles();
 
-    var letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
-        "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "å", "ä", "ö"];
+        console.log(input);
+        checkGuess(input);
+        console.log(corrGuesses);
 
-    var letterJSON = JSON.stringify(letters, null, 4);
-//document.getElementById("alphabet").innerHTML = letterJSON;
+        for (var i = 0; i < wordArray.length; i++) { //go through array and see if guess matches
+            if (input == wordArray[i]) {
+                $('#t' + i).append(input);
+                found = true;
+                console.log(found);
+                corrGuesses.push(input);
+                console.log(corrGuesses);
+            }
+        }
+        if (guesses.length == maxGuesses) {
+            alert("Game over");
+        }
+        else if (corrGuesses.length == wordArray.length) {
+            console.log(corrGuesses);
+            alert("You win!");
+        }
+    }
+
+    $("input[name='Submit']").click(function() {
+        guess(wordArray, currentGuesses);
+    })
+
+    $("input[name='Startgame']").click(function() {
+        startGame();
+    })
 });
-
