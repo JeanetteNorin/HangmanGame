@@ -1,0 +1,19 @@
+html, body{
+    margin 0;
+    padding 0;
+}
+.mainContainer{
+    display: inline-block;
+}
+
+.tile{
+    height: 40px;
+    width: 40px;
+    float: left;
+    background-color: black;
+    margin: 10px;
+}
+
+input{
+    width: 100px;
+}
